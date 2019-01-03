@@ -1,15 +1,15 @@
-import home from "../home"
-import search from "../search"
+import Home from "../home"
+import Search from "../search"
 
 const routes = [
   { 
     path: '/',
     exact: true,
-    component: home
+    component: Home
   },
   { 
     path: '/search',
-    component: search
+    component: Search
   }
 ]
 

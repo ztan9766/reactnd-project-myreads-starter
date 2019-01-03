@@ -1,41 +1,60 @@
 import React from "react";
-import * as Book from "../book";
+import Book from "../book";
 import * as BooksAPI from "../../actions/BooksAPI";
 
-class home extends React.Component {
+export default class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       shelves: [
         {
-          key: 'currentlyReading',
-          text: 'Currently Reading',
+          key: "currentlyReading",
+          text: "Currently Reading",
           books: []
         },
         {
-          key: 'wantToRead',
-          text: 'Want to Read',
+          key: "wantToRead",
+          text: "Want to Read",
           books: []
         },
         {
-          key: 'read',
-          text: 'Read',
+          key: "read",
+          text: "Read",
           books: []
         }
-      ]
+      ],
+      update: false
     };
   }
   async getBooks() {
     try {
       const books = await BooksAPI.getAll();
-      for (const book of books) {
-        for (const shelf of this.state.shelves) {
-          if(shelf.key === book.shelf) shelf.books.push(book)
+      for (const shelf of this.state.shelves) {
+        //empty shelf every time
+        shelf.books = []
+        for (const book of books) {
+          if (shelf.key === book.shelf) shelf.books.push(book);
         }
       }
+      //trigger re-render
+      this.setState({update: !this.state.update})
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async changeShelf(book, shelf) {
+    if(shelf === book.shelf) return
+    try{
+      await BooksAPI.update(book, shelf)
+      this.getBooks()
+    }catch (e) {
+      console.log(e)
+    }
+  }
+
+  componentDidMount(){
+    this.getBooks();
   }
 
   render() {
@@ -46,16 +65,24 @@ class home extends React.Component {
         </div>
         <div className="list-books-content">
           <div>
-            {this.state.shelves.map(({key, text, books}) => (
+            {this.state.shelves.map(({ key, text, books }) => (
               <div className="bookshelf" key={key}>
-                <h2 className="bookshelf-title">{ text }</h2>
+                <h2 className="bookshelf-title">{text}</h2>
                 <div className="bookshelf-books">
                   <ol className="books-grid">
-                    { books.length > 0 && books.map((book, key) => (
-                      <li key={key}>
-                        <Book url={book.imageLinks.thumbnail} title={book.title} author={book.author}></Book>
-                      </li>
-                    ))}
+                    {books.length > 0 &&
+                      books.map((book, index) => (
+                        <li key={index}>
+                          <Book
+                            shelf={key}
+                            item={book}
+                            url={book.imageLinks.thumbnail}
+                            title={book.title}
+                            author={book.author}
+                            update={ (book,shelf) => this.changeShelf(book,shelf)}
+                          />
+                        </li>
+                      ))}
                   </ol>
                 </div>
               </div>
@@ -71,5 +98,3 @@ class home extends React.Component {
     );
   }
 }
-
-export default home;

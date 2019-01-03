@@ -1,14 +1,14 @@
 import React from "react";
 import * as BooksAPI from "../../actions/BooksAPI";
 
-class search extends React.Component {
+export default class Search extends React.Component {
   render() {
     return (
       <div className="search-books">
         <div className="search-books-bar">
           <button
             className="close-search"
-            onClick={() => this.props.history.push('/')}
+            onClick={() => this.props.history.push("/")}
           >
             Close
           </button>
@@ -31,5 +31,3 @@ class search extends React.Component {
     );
   }
 }
-
-export default search

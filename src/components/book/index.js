@@ -1,6 +1,17 @@
 import React from "react";
 
-class book extends React.Component {
+export default class Book extends React.Component {
+  change (event){
+    const el = event.target;
+    if(el.selectedIndex && el.options[el.selectedIndex].value){
+      if(el.options[el.selectedIndex].value === 'none'){
+        event.preventDefault()
+      }else{
+        this.props.update(this.props.item, el.options[el.selectedIndex].value)
+      }
+    }
+  }
+
   render() {
     return (
       <div className="book">
@@ -15,13 +26,13 @@ class book extends React.Component {
             }}
           />
           <div className="book-shelf-changer">
-            <select>
+            <select onChange={e => this.change(e)}>
               <option value="move" disabled>
                 Move to...
               </option>
-              <option value="currentlyReading">Currently Reading</option>
-              <option value="wantToRead">Want to Read</option>
-              <option value="read">Read</option>
+              <option value="currentlyReading" selected={this.props.shelf === 'currentlyReading'}>Currently Reading</option>
+              <option value="wantToRead" selected={this.props.shelf === 'wantToRead'}>Want to Read</option>
+              <option value="read" selected={this.props.shelf === 'read'}>Read</option>
               <option value="none">None</option>
             </select>
           </div>
@@ -32,5 +43,3 @@ class book extends React.Component {
     );
   }
 }
-
-export default book;
