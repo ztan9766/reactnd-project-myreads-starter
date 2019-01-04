@@ -61,7 +61,7 @@ export default class Search extends React.Component {
               this.state.results.map((book, index) => (
                 <li key={index}>
                   <Book
-                    item={book}
+                    id={book.id}
                     update={(book, shelf) => this.changeShelf(book, shelf)}
                   />
                 </li>

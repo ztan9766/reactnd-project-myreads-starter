@@ -78,7 +78,7 @@ export default class Home extends React.Component {
                       books.map((book, index) => (
                         <li key={index}>
                           <Book
-                            item={book}
+                            id={book.id}
                             update={ (book,shelf) => this.changeShelf(book,shelf)}
                           />
                         </li>
