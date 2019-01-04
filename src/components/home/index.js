@@ -1,6 +1,7 @@
 import React from "react";
 import Book from "../book";
 import * as BooksAPI from "../../actions/BooksAPI";
+import emitter from "../../utils/events"
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -27,6 +28,7 @@ export default class Home extends React.Component {
     };
   }
   async getBooks() {
+    emitter.emit("showLoading")
     try {
       const books = await BooksAPI.getAll();
       for (const shelf of this.state.shelves) {
@@ -38,6 +40,7 @@ export default class Home extends React.Component {
       }
       //trigger re-render
       this.setState({update: !this.state.update})
+      emitter.emit("hideLoading")
     } catch (e) {
       console.log(e);
     }
@@ -45,6 +48,7 @@ export default class Home extends React.Component {
 
   async changeShelf(book, shelf) {
     if(shelf === book.shelf) return
+    emitter.emit("showLoading")
     try{
       await BooksAPI.update(book, shelf)
       this.getBooks()
@@ -74,11 +78,7 @@ export default class Home extends React.Component {
                       books.map((book, index) => (
                         <li key={index}>
                           <Book
-                            shelf={key}
                             item={book}
-                            url={book.imageLinks.thumbnail}
-                            title={book.title}
-                            author={book.author}
                             update={ (book,shelf) => this.changeShelf(book,shelf)}
                           />
                         </li>

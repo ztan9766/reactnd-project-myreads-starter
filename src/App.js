@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import routers from "./components/router";
+import Loading from "./components/loading";
 
 class BooksApp extends React.Component {
   render() {
@@ -19,7 +20,7 @@ class BooksApp extends React.Component {
               />
             ))}
           </Switch>
-          }
+          <Loading />
         </div>
       </BrowserRouter>
     );
